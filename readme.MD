@@ -1,6 +1,6 @@
 ## Smaller Batch Maker based on Unique Labels Count Per CSV
 ![](counter_updater_slicer.gif)
-* slicer moves to next file once unique label count goes beyond the limit per CSV
+* Slicer moves to next file once unique label count goes beyond the limit per CSV
 ```
 1. Counter: 
 Counts how many unique labels (column name+value) and lines excluding header in CSV.
