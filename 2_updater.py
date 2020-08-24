@@ -12,7 +12,7 @@ args = vars(parser.parse_args())
 
 # User Parameter
 FILENAME = str(args['filename'])
-DUPLICATE_LIMITS_PER_LABEL = int(args['duplicate']) if args['duplicate'] else 5000
+DUPLICATE_LIMITS_PER_LABEL = int(args['duplicate'])-1 if args['duplicate'] else 5000 # deduct 1 since index start = 0
 STRING_LENGTH_LIMIT = int(args['maxstring']) if args['maxstring'] else 63
 EXCEPTION_COLUMN = str(args['exception']) if args['exception'] else 'spec'
 
