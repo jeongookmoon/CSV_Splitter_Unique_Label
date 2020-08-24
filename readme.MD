@@ -15,6 +15,8 @@ Slice the CSV into smaller files based on allowed unique labels count per CSV
 4. Updater&Slicer:
 Combination of 2 and 3
 
+![](counter_updater_slicer.gif)
+
 Example CSV from
 https://www.stats.govt.nz/large-datasets/csv-files-for-download/
 ```
