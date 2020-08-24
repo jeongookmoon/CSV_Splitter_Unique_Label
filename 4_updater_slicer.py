@@ -2,6 +2,7 @@ import csv
 import os
 import re
 import argparse
+from common_functions import getCSVLength
 
 parser = argparse.ArgumentParser(description='Update CSV and slice into unique labels per CSV')
 parser.add_argument('-f','--filename', help='Filename', required=True)
@@ -34,19 +35,25 @@ unique_labels = {}
 unique_label_index = 0
 pages = []
 
-def getCSVLength(filename):
-  with open(filename) as csv_object:
-    return sum(1 for row in csv_object)-1 # deduct 1 for header
+def findNewLabel(column_name, column_value, duplicate_limit, string_length):
+  postfix=0
+  new_label=str(column_name)+str(column_value)
+  new_column_value=column_value
+  while(new_label in unique_labels and unique_labels[new_label]>duplicate_limit):
+    postfix+=1
+    new_column_value = column_value[:-len(str(postfix))]+str(postfix) if len(column_value+str(postfix)) > string_length else column_value+str(postfix)
+    new_label=column_name+new_column_value
+  return new_label, new_column_value
 
 with open(FILENAME) as infile:
   # create an object that can map with key
   reader = csv.DictReader(infile)
   header = reader.fieldnames
-  CSV_LAST_INDEX = getCSVLength(FILENAME)-1
+  CSV_LAST_INDEX = getCSVLength(FILENAME)-2 # deduct 2 for header and start index=0
   
   for index, row in enumerate(reader):
     for column_name, column_value in row.items():     
-      if column_name != EXCEPTION_COLUMN:
+      if column_name != EXCEPTION_COLUMN and len(column_value) > 0:
 
         # truncate from right if the column_value length greater than limit
         column_value = column_value[:STRING_LENGTH_LIMIT] if len(
@@ -58,26 +65,15 @@ with open(FILENAME) as infile:
         # remove special characters at beginning and ending
         column_value = column_value.lstrip('-').lstrip('_').rstrip('-').rstrip('_')
 
-        label_value = column_name+column_value
-        
+        # find new label and column value that match string length limit and duplicate label limit
+        label_value, column_value = findNewLabel(column_name, column_value, DUPLICATE_LIMITS_PER_LABEL, STRING_LENGTH_LIMIT)
+
         if not label_value in unique_labels:
           unique_labels[label_value] = 0
-        else:
-          # skip empty column_values
-          if(len(column_value)>0):
-            # append EXCEED_COUNT to column_value if LABEL count exceeds DUPLICATE_LIMITS_PER_LABEL
-            EXCEED_COUNT = int(unique_labels[label_value]/DUPLICATE_LIMITS_PER_LABEL)
-            if EXCEED_COUNT >= 1:
-              column_value = column_value[:-EXCEED_COUNT] + str(EXCEED_COUNT) if len(
-                  column_value) == STRING_LENGTH_LIMIT else column_value + str(EXCEED_COUNT)
-            label_value = column_name+column_value
-            if not label_value in unique_labels:
-              unique_labels[label_value] = 0
-
-        unique_labels[label_value] += 1     
+        unique_labels[label_value] += 1
+        
         # update column_value
         row[column_name] = column_value
-
     updated_rows.append(row)
     updated_rows_current_index = len(updated_rows)
 

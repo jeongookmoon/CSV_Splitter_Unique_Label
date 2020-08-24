@@ -9,8 +9,8 @@ parser.add_argument('-e', '--exception', help='Name of exception column; This co
 args = vars(parser.parse_args())
 
 # User Parameter
-FILENAME = glob(args['filename']) if '*' in args['filename'] else args['filename']
-EXCEPTION_COLUMN = args['exception'] if args['exception'] else 'spec'
+FILENAME = glob(args['filename']) if '*' in args['filename'] else str(args['filename'])
+EXCEPTION_COLUMN = str(args['exception']) if args['exception'] else 'spec'
 
 if isinstance(FILENAME, str):
   if (fileChecker(FILENAME)):

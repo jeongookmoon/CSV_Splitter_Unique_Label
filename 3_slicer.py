@@ -19,7 +19,6 @@ CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 full_path = os.path.join(CURRENT_DIR, FILENAME)
 full_path_name_only = os.path.splitext(full_path)[0]
 
-
 # Helpers
 updated_rows = []
 updated_rows_start_index = 0
@@ -44,9 +43,13 @@ with open(FILENAME) as infile:
         if not LABEL in unique_labels:
           unique_labels[LABEL] = 0
         unique_labels[LABEL] += 1
-
+    
+    updated_rows.append(row)
+    updated_rows_current_index = len(updated_rows)
+    
     if(UNIQUE_LABELS_PER_CSV < len(unique_labels) or index == CSV_LAST_INDEX):
       pages.append(updated_rows[updated_rows_start_index: updated_rows_current_index])
+      updated_rows_start_index = updated_rows_current_index
       unique_labels={}
 
 for index, page in enumerate(pages):
