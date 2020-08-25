@@ -51,10 +51,10 @@ with open(FILENAME) as infile:
     for column_name, column_value in row.items():
       label_value = column_name+column_value
       if column_name != EXCEPTION_COLUMN and len(column_value) > 0:
-
+        total_length = len(column_name+'='+column_value)
+        column_length = total_length-len(column_name+'=')
         # truncate from right if the column_value length greater than limit
-        column_value = column_value[:STRING_LENGTH_LIMIT] if len(
-            column_value) > STRING_LENGTH_LIMIT else column_value
+        column_value = column_value[:column_length] if total_length > STRING_LENGTH_LIMIT else column_value
 
         # regex replace unsupported characters
         column_value = re.sub(SPECIAL_CHAR_REGEX, '-', column_value)
@@ -63,7 +63,7 @@ with open(FILENAME) as infile:
         column_value = column_value.lstrip('-').lstrip('_').rstrip('-').rstrip('_')
 
         # find new label and column value that match string length limit and duplicate label limit
-        label_value, column_value = findNewLabel(column_name, column_value, DUPLICATE_LIMITS_PER_LABEL, STRING_LENGTH_LIMIT)
+        label_value, column_value = findNewLabel(column_name, column_value, DUPLICATE_LIMITS_PER_LABEL, column_length)
 
         if not label_value in unique_labels:
           unique_labels[label_value] = 0
