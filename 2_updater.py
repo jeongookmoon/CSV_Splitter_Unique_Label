@@ -41,6 +41,11 @@ def findNewLabel(column_name, column_value, duplicate_limit, string_length):
     new_column_value = column_value[:-len(str(postfix))]+str(postfix) if len(column_value+str(postfix)) > string_length else column_value+str(postfix)
     new_label=column_name+new_column_value
   return new_label, new_column_value
+
+def trimmer(label):
+  while(label.startswith('-') or label.startswith('_') or label.endswith('-') or label.endswith('_')):
+    label = label.lstrip('-').lstrip('_').rstrip('-').rstrip('_')
+  return label
   
 with open(FILENAME) as infile:
   # create an object that can map with key
@@ -51,19 +56,19 @@ with open(FILENAME) as infile:
     for column_name, column_value in row.items():
       label_value = column_name+column_value
       if column_name != EXCEPTION_COLUMN and len(column_value) > 0:
-        total_length = len(column_name+'='+column_value)
-        column_length = total_length-len(column_name+'=')
+        new_column_length = STRING_LENGTH_LIMIT-len(column_name)-1
         # truncate from right if the column_value length greater than limit
-        column_value = column_value[:column_length] if total_length > STRING_LENGTH_LIMIT else column_value
+        column_value = column_value[:new_column_length] if len(
+            column_value) > new_column_length else column_value
 
         # regex replace unsupported characters
         column_value = re.sub(SPECIAL_CHAR_REGEX, '-', column_value)
 
-        # remove special characters at beginning and ending
-        column_value = column_value.lstrip('-').lstrip('_').rstrip('-').rstrip('_')
+        # remove special characters at beginning and ending recursively
+        column_value = trimmer(column_value)
 
         # find new label and column value that match string length limit and duplicate label limit
-        label_value, column_value = findNewLabel(column_name, column_value, DUPLICATE_LIMITS_PER_LABEL, column_length)
+        label_value, column_value = findNewLabel(column_name, column_value, DUPLICATE_LIMITS_PER_LABEL, new_column_length)
 
         if not label_value in unique_labels:
           unique_labels[label_value] = 0

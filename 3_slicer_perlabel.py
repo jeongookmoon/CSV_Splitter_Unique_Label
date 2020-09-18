@@ -53,8 +53,7 @@ with open(FILENAME) as infile:
       unique_labels={}
 
 for index, page in enumerate(pages):
-  prefix = str(UNIQUE_LABELS_PER_CSV/1000)+'k' if UNIQUE_LABELS_PER_CSV >= 1000 and updated_rows_start_index >= 1000 else str(UNIQUE_LABELS_PER_CSV)
-  new_file_path='{}_{}-{}.csv'.format(full_path_name_only, prefix, str(index+1))
+  new_file_path='{}_{}-{}.csv'.format(full_path_name_only, str(UNIQUE_LABELS_PER_CSV), str(index+1))
   with open(new_file_path, 'w+') as outfile:
     writer = csv.DictWriter(outfile, lineterminator='\n', fieldnames=header)
     writer.writeheader()
