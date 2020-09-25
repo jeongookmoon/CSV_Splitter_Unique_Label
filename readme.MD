@@ -1,6 +1,8 @@
 # Counter, Updater, Slicer per unique labels or number of lines 
 4 CSV Tools
 
+![](counter_updater_slicer.gif)
+
 ## Help/Usage
 "-h" gives usage info. 
 
