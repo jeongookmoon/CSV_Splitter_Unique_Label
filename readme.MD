@@ -1,5 +1,8 @@
-# Counter, Updater, Slicer per unique labels or number of lines 
-4 CSV Tools
+# 4 CSV Tools: Counter, Updater and 2 Splitter 
+1. Counter: counts unique labels(column name+value) and line numbers
+2. Updater: replace unsupported chars, adjust length, get new name with postfix, strip start and end char if special char
+3. Splitter per Unique Labels: Split CSV based on unique labels(column name+value)
+4. Splitter per Line Numbers: Split CSV based on number of lines 
 
 ![](counter_updater_slicer.gif)
 
